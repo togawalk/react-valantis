@@ -14,7 +14,6 @@
     --card-hover: 210 40% 98.04%;
     --card-alternative: 210 20% 98.04%;
   }
-
 }
 
 html,
@@ -34,7 +33,6 @@ body,
 /* table td:nth-child(1), table td:nth-last-child(1) { */
 /*   @apply font-medium; */
 /* } */
-
 
 table td:nth-child(1),
 table td:nth-child(3),
