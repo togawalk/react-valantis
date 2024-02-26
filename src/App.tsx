@@ -1,7 +1,34 @@
-import { Table } from "./components/ui/Table"
+import axios from "axios";
+import { Table } from "@/components/ui/Table"
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
+import { useEffect } from "react";
+import { md5 } from "js-md5";
+import { getTimestamp } from "@/utils";
 
 function App() {
+
+  async function fetchValantis() {
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}`,
+        {
+          action: "filter",
+          params: { price: 17500.0 }
+        },
+        { headers: { 'X-Auth': md5(`${import.meta.env.VITE_AUTH_PASS}_${getTimestamp()}`) } },
+      );
+      console.log(data)
+
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
+  useEffect(() => {
+    fetchValantis()
+  }, [])
+
   return (
     <>
       <main className="max-w-screen-lg mx-auto px-4 flex flex-col justify-center min-h-full py-16">

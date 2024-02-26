@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom"
-
 const data = [
   { id: '12d19cdd-a58a-41bf-b387-3c8c3d08a40a', name: 'Золотое кольцо с бриллиантами', price: 2333, brand: '' }
 ]
