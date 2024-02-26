@@ -1,33 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Table } from "./components/ui/Table"
+import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <main className="max-w-screen-lg mx-auto px-4 flex flex-col justify-center min-h-full py-16">
+        <div className="w-full flex items-end justify-between">
+          <div>
+            <h1 className="font-semibold">
+              Товары
+            </h1>
+            <p className="mt-2 text-foreground-light text-sm">
+              Список товаров включает в себя ID, название, цену и бренд.
+            </p>
+          </div>
+          <div className="flex shadow bg-card rounded-lg ring-1 ring-black/[.05] overflow-hidden">
+            <button className="h-8 w-8 flex justify-center items-center hover:bg-card-hover">
+              <MdNavigateBefore className="h-6 w-6" />
+            </button>
+            <button className="h-8 w-8 flex justify-center items-center hover:bg-card-hover">
+              <MdNavigateNext className="h-6 w-6" />
+            </button>
+          </div>
+
+
+        </div>
+        <div className="mt-8">
+          <Table />
+        </div>
+
+        <div className="flex shadow bg-card rounded-lg ring-1 ring-black/[.05] overflow-hidden self-end mt-8">
+          <button className="h-8 w-8 flex justify-center items-center hover:bg-card-hover">
+            <MdNavigateBefore className="h-6 w-6" />
+          </button>
+          <button className="h-8 w-8 flex justify-center items-center hover:bg-card-hover">
+            <MdNavigateNext className="h-6 w-6" />
+          </button>
+        </div>
+      </main>
     </>
   )
 }
