@@ -1,36 +1,43 @@
-import axios from 'axios'
 import { Table } from '@/components/ui/Table'
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md'
-import { useEffect } from 'react'
+import { useQuery } from 'react-query'
+import axios from 'axios'
 import { md5 } from 'js-md5'
-import { getTimestamp } from '@/utils'
+import { getTimestamp } from './utils'
+
+async function fetchCoins() {
+  const { data } = await axios.post(
+    `${import.meta.env.VITE_API_URL}`,
+    {
+      action: "get_ids",
+      params: { offset: 0, limit: 50 }
+    },
+    {
+      headers: {
+        'X-Auth': md5(`${import.meta.env.VITE_AUTH_PASS}_${getTimestamp()}`),
+      }
+
+    }
+  )
+
+  return data.result
+}
 
 function App() {
-  async function fetchValantis() {
-    try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}`,
-        {
-          action: 'filter',
-          params: { price: 17500.0 },
-        },
-        {
-          headers: {
-            'X-Auth': md5(
-              `${import.meta.env.VITE_AUTH_PASS}_${getTimestamp()}`
-            ),
-          },
-        }
-      )
-      console.log(data)
-    } catch (error) {
-      console.log(error)
-    }
+  const { data, isLoading, isError } = useQuery('products', fetchCoins)
+
+  if (isLoading) {
+    return <h3>Loading</h3>
   }
 
-  useEffect(() => {
-    fetchValantis()
-  }, [])
+  if (isError) {
+    return <h3>Error</h3>
+  }
+
+  if (!data) {
+    return <h3>no data</h3>
+  }
+  console.log(data)
 
   return (
     <>
@@ -52,7 +59,7 @@ function App() {
           </div>
         </div>
         <div className='mt-8'>
-          <Table />
+          <Table data={data} columns={['hi', 'hello']} />
         </div>
 
         <div className='flex shadow bg-card rounded-lg ring-1 ring-black/[.05] overflow-hidden self-end mt-8'>
