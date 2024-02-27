@@ -1,6 +1,6 @@
 interface Product {
   id: string,
-  name: string,
+  product: string,
   price: number,
   brand: string
 }
@@ -19,11 +19,11 @@ export const Tbody = ({ data }: { data: Products }) => {
             key={product.id}
           >
             <td className='pl-6 pr-3 py-4'>
-              12d19cdd-a58a-41bf-b387-3c8c3d08a40a
+              {product.id}
             </td>
-            <td className='py-4 px-3'>Золотое кольцо с бриллиантами</td>
-            <td className='px-3'>16700.0</td>
-            <td className='pl-3 pr-6'>Piaget</td>
+            <td className='py-4 px-3'>{product.product}</td>
+            <td className='px-3'>{product.price}</td>
+            <td className='pl-3 pr-6'>{product.brand}</td>
           </tr>
         )
       })}

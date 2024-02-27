@@ -6,21 +6,38 @@ import { md5 } from 'js-md5'
 import { getTimestamp } from './utils'
 
 async function fetchCoins() {
-  const { data } = await axios.post(
+  const xAuthHeader= md5(`${import.meta.env.VITE_AUTH_PASS}_${getTimestamp()}`);
+
+  const { data: idsResponse } = await axios.post(
     `${import.meta.env.VITE_API_URL}`,
     {
       action: "get_ids",
-      params: { offset: 0, limit: 50 }
+      params: { offset: 0, limit: 100 }
     },
     {
       headers: {
-        'X-Auth': md5(`${import.meta.env.VITE_AUTH_PASS}_${getTimestamp()}`),
+        'X-Auth': xAuthHeader,
       }
 
     }
   )
 
-  return data.result
+  const { data: products } = await axios.post(
+    `${import.meta.env.VITE_API_URL}`,
+    {
+      action: "get_items",
+      params: { ids: idsResponse.result }
+    },
+    {
+      headers: {
+        'X-Auth': xAuthHeader,
+      }
+
+    }
+  )
+  console.log(products.result)
+
+  return products.result
 }
 
 function App() {
@@ -37,7 +54,6 @@ function App() {
   if (!data) {
     return <h3>no data</h3>
   }
-  console.log(data)
 
   return (
     <>
