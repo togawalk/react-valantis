@@ -1,6 +1,5 @@
 export const Thead = () => {
   return (
-
     <thead className='bg-card-alternative'>
       <tr className='font-semibold text-left border-b border-black/[.15]'>
         <th className='pl-6 pr-3 py-3.5 text-foreground'>ID</th>

@@ -8,15 +8,15 @@ export class FetchData {
     'X-Auth': md5(`${import.meta.env.VITE_AUTH_PASS}_${getTimestamp()}`),
   }
 
-  constructor() { }
+  constructor() {}
 
   async getProducts() {
     const { data } = await axios.post(
       this.apiUrl,
 
       {
-        action: "get_ids",
-        params: { offset: 0, limit: 50 }
+        action: 'get_ids',
+        params: { offset: 0, limit: 50 },
       },
       { headers: this.headers }
     )
