@@ -35,7 +35,6 @@ export class FetchData {
       },
       { headers: this.headers }
     )
-    console.log(data.result)
     return data.result
   }
 

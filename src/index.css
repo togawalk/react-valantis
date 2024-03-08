@@ -39,3 +39,13 @@ table td:nth-child(3),
 table td:nth-last-child(1) {
   @apply text-foreground-lighter font-medium;
 }
+
+table th:first-child,
+table td:first-child {
+  @apply pl-6;
+}
+
+table th:last-child,
+table td:last-child {
+  @apply pr-6;
+}

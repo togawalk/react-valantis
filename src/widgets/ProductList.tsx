@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Table } from '@/components/ui/Table'
+import { useState } from 'react'
+import { Table } from '@/shared/ui/Table'
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md'
 import { Filter, fetchData } from '@/shared/api/base'
 import { CgSpinner } from 'react-icons/cg'
@@ -68,23 +68,19 @@ export const ProductList = () => {
     setPage(1)
   };
 
-  const { data, isLoading, isError } = useQuery(['products', debouncedPage, searchFilter], () => {
+  const { data, isLoading, isError, error } = useQuery(['products', debouncedPage, searchFilter], () => {
     if (searchFilter) {
       return fetchProducts(debouncedPage, searchFilter)
     } else {
       return fetchProducts(debouncedPage)
     }
   })
+  const products = data ?? []
 
   if (isError) {
     return <h3>Error</h3>
   }
 
-  if (!data) {
-    return <h3>no data</h3>
-  }
-
-  console.log(data.length)
   return (
     <div>
       <section>
@@ -136,8 +132,6 @@ export const ProductList = () => {
           </button>
           <button
             onClick={() => setPage((p) => p + 1)}
-
-            // disabled={data.length < 50}
             className='h-8 w-8 flex justify-center items-center hover:bg-card-hover disabled:text-foreground-lighter disabled:bg-card-alternative disabled:cursor-not-allowed'
           >
             <MdNavigateNext className='h-6 w-6' />
@@ -145,13 +139,16 @@ export const ProductList = () => {
         </div>
       </div>
       <div className='mt-8'>
-        {isLoading ? (
+
+        {isLoading && (
           <div className='py-12 px-4 flex items-center justify-center flex-col bg-card ring-1 ring-black/[.05] rounded-lg shadow'>
             <CgSpinner className="h-6 w-6 mr-2 animate-spin" />
           </div>
-        ) : (
-          <Table data={data} columns={['hi', 'hello']} />
         )}
+        {isError && <span>{error}</span>}
+
+        {(products?.length == 0 && !isLoading) && <span>nodata</span>}
+        {(products.length !== 0) && <Table data={data} columns={['ID', 'Название', 'Цена', 'Бренд']} />}
         <p className='mt-2 text-foreground-lighter italic text-end'>страница: {debouncedPage}</p>
       </div>
     </div>
