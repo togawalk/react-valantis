@@ -11,7 +11,11 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />,
   },
-])
+],
+  {
+    basename: '/react-valantis'
+  }
+)
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <QueryClientProvider client={queryClient}>
