@@ -5,14 +5,11 @@ import { Filter, fetchData } from '@/shared/api/base'
 import { CgSpinner } from 'react-icons/cg'
 import { useDebounce } from '@/shared/hooks/useDebounce'
 import { trimAndLimitArray } from '@/shared/lib'
-import { Product } from '@/shared/lib/removeProductDuplicates'
+import { useQuery } from 'react-query'
+import { PRODUCTS_PER_PAGE } from '@/shared/config'
 
 
 export const ProductList = () => {
-  const [data, setData] = useState<Product[]>()
-  const [isLoading, setIsLoading] = useState(true)
-  const [isError, setIsError] = useState(false)
-
   const [inputValues, setInputValues] = useState([
     { name: 'product', label: 'Название', value: '' },
     { name: 'brand', label: 'Бренд', value: '' },
@@ -26,29 +23,17 @@ export const ProductList = () => {
   const debouncedPage = useDebounce(page)
 
 
-  if (isError) {
-    return <h3>Error</h3>
-  }
-
   async function fetchProducts(page: number, filter?: Filter) {
-    setIsLoading(true)
-    const itemsPerPage = 5;
-    const skip = (page - 1) * itemsPerPage;
+    const skip = (page - 1) * PRODUCTS_PER_PAGE;
     let products
 
     if (filter) {
       const idsResponse = await fetchData.getIdsWithFilter(filter)
-      products = await fetchData.getProducts(trimAndLimitArray(idsResponse, skip, 5))
+      products = await fetchData.getProducts(trimAndLimitArray(idsResponse, skip, 50))
     } else {
       const idsResponse = await fetchData.getIds(skip)
-      products = await fetchData.getProducts(idsResponse)
+      products = await fetchData.getProducts(trimAndLimitArray(idsResponse, 0, 50))
     }
-
-
-    console.log(products)
-    setData(products)
-    setIsLoading(false)
-
     return products
   }
 
@@ -83,17 +68,23 @@ export const ProductList = () => {
     setPage(1)
   };
 
-  useEffect(() => {
+  const { data, isLoading, isError } = useQuery(['products', debouncedPage, searchFilter], () => {
     if (searchFilter) {
-      console.log(searchFilter)
-      fetchProducts(debouncedPage, searchFilter)
+      return fetchProducts(debouncedPage, searchFilter)
     } else {
-      fetchProducts(debouncedPage)
+      return fetchProducts(debouncedPage)
     }
-  }, [debouncedPage, searchFilter])
+  })
 
+  if (isError) {
+    return <h3>Error</h3>
+  }
 
+  if (!data) {
+    return <h3>no data</h3>
+  }
 
+  console.log(data.length)
   return (
     <div>
       <section>
@@ -145,7 +136,9 @@ export const ProductList = () => {
           </button>
           <button
             onClick={() => setPage((p) => p + 1)}
-            className='h-8 w-8 flex justify-center items-center hover:bg-card-hover'
+
+            // disabled={data.length < 50}
+            className='h-8 w-8 flex justify-center items-center hover:bg-card-hover disabled:text-foreground-lighter disabled:bg-card-alternative disabled:cursor-not-allowed'
           >
             <MdNavigateNext className='h-6 w-6' />
           </button>

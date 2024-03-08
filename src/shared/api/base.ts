@@ -1,6 +1,7 @@
 import { md5 } from 'js-md5'
 import { getTimestamp, removeProductDuplicates } from '@/shared/lib'
 import axios from 'axios'
+import { PRODUCTS_PER_PAGE } from '../config';
 
 interface ProductFilter {
   product: string;
@@ -30,10 +31,11 @@ export class FetchData {
 
       {
         action: 'get_ids',
-        params: { offset: skip, limit: 5 },
+        params: { offset: skip, limit: 70},
       },
       { headers: this.headers }
     )
+    console.log(data.result)
     return data.result
   }
 
