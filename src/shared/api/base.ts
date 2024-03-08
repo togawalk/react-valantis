@@ -1,11 +1,20 @@
 import { md5 } from 'js-md5'
-import { getTimestamp, removeProductDuplicates } from '.'
+import { getTimestamp, removeProductDuplicates } from '@/shared/lib'
 import axios from 'axios'
 
-interface getIdsWithFilterProps {
-  filterBy: 'brand' | 'product' | 'price',
-  value: string | number
+interface ProductFilter {
+  product: string;
 }
+
+interface BrandFilter {
+  brand: string;
+}
+
+interface PriceFilter {
+  price: number;
+}
+
+export type Filter = ProductFilter | BrandFilter | PriceFilter;
 
 export class FetchData {
   private apiUrl = `${import.meta.env.VITE_API_URL}`
@@ -45,12 +54,13 @@ export class FetchData {
   }
 
 
-  async getIdsWithFilter({ filterBy, value }: getIdsWithFilterProps) {
+  // async getIdsWithFilter({ filterBy, value }: getIdsWithFilterProps) {
+  async getIdsWithFilter(filters: Filter) {
     const { data } = await axios.post(
       this.apiUrl,
       {
         action: "filter",
-        params: { "price": 17500.0 }
+        params: filters 
       },
       { headers: this.headers }
     )

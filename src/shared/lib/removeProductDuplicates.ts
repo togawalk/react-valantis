@@ -1,12 +1,8 @@
-interface Product {
+export interface Product {
   id: string
   price: number
   product: string
   brand: string | null
-}
-
-export function getTimestamp() {
-  return new Date().toISOString().slice(0, 10).replace(/-/g, '')
 }
 
 export function removeProductDuplicates(arr: Product[]) {
