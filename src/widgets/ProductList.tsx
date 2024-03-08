@@ -147,7 +147,11 @@ export const ProductList = () => {
         )}
         {isError && <span>{error}</span>}
 
-        {(products?.length == 0 && !isLoading) && <span>nodata</span>}
+        {(products?.length == 0 && !isLoading) && (
+          <div className='flex items-center justify-center min-h-48 from-card to-transparent bg-gradient-to-r rounded border-dashed border-2'>
+            <p className='text-foreground-light text-xl font-medium'>Нет данных</p>
+          </div>
+        )}
         {(products.length !== 0) && <Table data={data} columns={['ID', 'Название', 'Цена', 'Бренд']} />}
         <p className='mt-2 text-foreground-lighter italic text-end'>страница: {debouncedPage}</p>
       </div>
