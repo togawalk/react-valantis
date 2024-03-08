@@ -99,7 +99,7 @@ export const ProductList = () => {
               <input
                 id={input.name}
                 className='shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 disabled:bg-gray-100 disabled:cursor-not-allowed'
-                disabled={selectedFilterMethod !== input.name ? true : false}
+                disabled={selectedFilterMethod !== input.name}
                 value={input.value}
                 onChange={(event) => handleInputChange(event, index)}
               />
@@ -125,12 +125,14 @@ export const ProductList = () => {
         <div className='flex shadow bg-card rounded-lg ring-1 ring-black/[.05] overflow-hidden'>
           <button
             onClick={() => setPage((p) => p - 1)}
-            disabled={!(page - 1)}
+            disabled={!(page - 1) || isLoading}
             className='h-8 w-8 flex justify-center items-center hover:bg-card-hover disabled:text-foreground-lighter disabled:bg-card-alternative disabled:cursor-not-allowed'
           >
             <MdNavigateBefore className='h-6 w-6' />
           </button>
           <button
+
+            disabled={isLoading}
             onClick={() => setPage((p) => p + 1)}
             className='h-8 w-8 flex justify-center items-center hover:bg-card-hover disabled:text-foreground-lighter disabled:bg-card-alternative disabled:cursor-not-allowed'
           >
