@@ -7,6 +7,8 @@ import { useDebounce } from '@/shared/hooks/useDebounce'
 import { trimAndLimitArray } from '@/shared/lib'
 import { useQuery } from 'react-query'
 import { PRODUCTS_PER_PAGE } from '@/shared/config'
+import { Toaster } from 'react-hot-toast'
+import { AxiosError } from 'axios'
 
 
 export const ProductList = () => {
@@ -18,7 +20,7 @@ export const ProductList = () => {
 
 
   const [selectedFilterMethod, setSelectedFilterMethod] = useState(inputValues[1].name)
-  const [searchFilter, setSearchFilter] = useState()
+  const [searchFilter, setSearchFilter] = useState<Filter>(null)
   const [page, setPage] = useState(1)
   const debouncedPage = useDebounce(page)
 
@@ -37,7 +39,7 @@ export const ProductList = () => {
     return products
   }
 
-  const handleInputChange = (event, index) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const { value } = event.target;
     const updatedInputValues = inputValues.map((item, i) =>
       i === index ? { ...item, value } : item
@@ -46,25 +48,34 @@ export const ProductList = () => {
   };
 
   const handleSearch = async () => {
-    const activeFilter = inputValues.find((input) => input.name === selectedFilterMethod);
-    const filterObject = {
-      [activeFilter.name]: activeFilter.value
-    };
-    const filter = activeFilter && activeFilter.value.trim() !== '' ? filterObject : undefined;
-    if (filter.hasOwnProperty('price')) {
-      const priceValue = filter['price'];
-      const parsedPrice = parseFloat(priceValue);
-      if (!isNaN(parsedPrice)) {
-        filter['price'] = parsedPrice;
-      }
-
+    const activeFilter = inputValues.find((input) => input.name === selectedFilterMethod) || { value: '', name: '' };
+    if (activeFilter.value.trim() === "") {
+      setSearchFilter(null);
+      setPage(1);
+      return;
+    }
+    let filterObject;
+    switch (activeFilter.name) {
+      case "price":
+        let parsedPrice = parseFloat(activeFilter.value);
+        if (!isNaN(parsedPrice)) {
+          filterObject = { price: parsedPrice }
+        } else {
+          setPage(1);
+          return;
+        }
+        break;
+      case "brand":
+        filterObject = { brand: activeFilter.value }
+        break;
+      case "product":
+        filterObject = { product: activeFilter.value }
+        break;
+      default:
+        return;
     }
 
-    if (filter) {
-      setSearchFilter(filter)
-    } else {
-      setSearchFilter('')
-    }
+    setSearchFilter(filterObject)
     setPage(1)
   };
 
@@ -78,11 +89,15 @@ export const ProductList = () => {
   const products = data ?? []
 
   if (isError) {
-    return <h3>Error</h3>
+    const errorData = error as Error | AxiosError;
+    return <div className='flex justify-center'>
+      <p className='text-foreground-lighter text-4xl font-medium'>{errorData.message}</p>
+    </div>
   }
 
   return (
     <div>
+      <Toaster />
       <section>
         <fieldset className='grid w-full grid-cols-12 items-end'>
           {inputValues.map((input, index) => (

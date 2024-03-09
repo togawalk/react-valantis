@@ -1,7 +1,6 @@
 import { md5 } from 'js-md5'
 import { getTimestamp, removeProductDuplicates } from '@/shared/lib'
 import axios from 'axios'
-import { PRODUCTS_PER_PAGE } from '../config';
 
 interface ProductFilter {
   product: string;
@@ -15,7 +14,7 @@ interface PriceFilter {
   price: number;
 }
 
-export type Filter = ProductFilter | BrandFilter | PriceFilter;
+export type Filter = ProductFilter | BrandFilter | PriceFilter | null;
 
 export class FetchData {
   private apiUrl = `${import.meta.env.VITE_API_URL}`
