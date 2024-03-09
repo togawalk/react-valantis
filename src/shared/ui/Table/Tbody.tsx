@@ -13,13 +13,13 @@ export const Tbody = ({ data }: { data: Products }) => {
       {data.map((product) => {
         return (
           <tr
-            className='border-b cursor-pointer hover:bg-card-hover'
+            className='cursor-pointer border-b hover:bg-card-hover'
             key={product.id}
           >
-            <td className='py-4 px-3'>{product.id}</td>
-            <td className='py-4 px-3'>{product.product}</td>
-            <td className='py-4 px-3'>{product.price}</td>
-            <td className='py-4 px-3'>{product.brand}</td>
+            <td className='px-3 py-4'>{product.id}</td>
+            <td className='px-3 py-4'>{product.product}</td>
+            <td className='px-3 py-4'>{product.price}</td>
+            <td className='px-3 py-4'>{product.brand}</td>
           </tr>
         )
       })}

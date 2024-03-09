@@ -2,7 +2,7 @@ import { ProductList } from '@/widgets/ProductList'
 
 function App() {
   return (
-    <main className='max-w-screen-lg mx-auto px-4 min-h-full py-16'>
+    <main className='mx-auto min-h-full max-w-screen-lg px-4 py-16'>
       <ProductList />
     </main>
   )
