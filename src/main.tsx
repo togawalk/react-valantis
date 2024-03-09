@@ -8,24 +8,28 @@ import toast from 'react-hot-toast'
 
 const queryClient = new QueryClient()
 const notify = (error: Error | AxiosError) => {
-  toast(error.message);
+  toast(error.message)
 }
 
-axios.interceptors.response.use(function(response) {
-  return response;
-}, function(error) {
-  notify(error)
-  return Promise.reject(error);
-});
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
+axios.interceptors.response.use(
+  function (response) {
+    return response
   },
-],
+  function (error) {
+    notify(error)
+    return Promise.reject(error)
+  }
+)
+
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <App />,
+    },
+  ],
   {
-    basename: '/react-valantis'
+    basename: '/react-valantis',
   }
 )
 

@@ -10,89 +10,104 @@ import { PRODUCTS_PER_PAGE } from '@/shared/config'
 import { Toaster } from 'react-hot-toast'
 import { AxiosError } from 'axios'
 
-
 export const ProductList = () => {
   const [inputValues, setInputValues] = useState([
     { name: 'product', label: 'Название', value: '' },
     { name: 'brand', label: 'Бренд', value: '' },
-    { name: 'price', label: 'Цена', value: '' }
-  ]);
+    { name: 'price', label: 'Цена', value: '' },
+  ])
 
-
-  const [selectedFilterMethod, setSelectedFilterMethod] = useState(inputValues[1].name)
+  const [selectedFilterMethod, setSelectedFilterMethod] = useState(
+    inputValues[1].name
+  )
   const [searchFilter, setSearchFilter] = useState<Filter>(null)
   const [page, setPage] = useState(1)
   const debouncedPage = useDebounce(page)
 
-
   async function fetchProducts(page: number, filter?: Filter) {
-    const skip = (page - 1) * PRODUCTS_PER_PAGE;
+    const skip = (page - 1) * PRODUCTS_PER_PAGE
     let products
 
     if (filter) {
       const idsResponse = await fetchData.getIdsWithFilter(filter)
-      products = await fetchData.getProducts(trimAndLimitArray(idsResponse, skip, 50))
+      products = await fetchData.getProducts(
+        trimAndLimitArray(idsResponse, skip, 50)
+      )
     } else {
       const idsResponse = await fetchData.getIds(skip)
-      products = await fetchData.getProducts(trimAndLimitArray(idsResponse, 0, 50))
+      products = await fetchData.getProducts(
+        trimAndLimitArray(idsResponse, 0, 50)
+      )
     }
     return products
   }
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const { value } = event.target;
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const { value } = event.target
     const updatedInputValues = inputValues.map((item, i) =>
       i === index ? { ...item, value } : item
-    );
-    setInputValues(updatedInputValues);
-  };
+    )
+    setInputValues(updatedInputValues)
+  }
 
   const handleSearch = async () => {
-    const activeFilter = inputValues.find((input) => input.name === selectedFilterMethod) || { value: '', name: '' };
-    if (activeFilter.value.trim() === "") {
-      setSearchFilter(null);
-      setPage(1);
-      return;
+    const activeFilter = inputValues.find(
+      (input) => input.name === selectedFilterMethod
+    ) || { value: '', name: '' }
+    if (activeFilter.value.trim() === '') {
+      setSearchFilter(null)
+      setPage(1)
+      return
     }
-    let filterObject;
+    let filterObject
     switch (activeFilter.name) {
-      case "price":
-        let parsedPrice = parseFloat(activeFilter.value);
+      case 'price':
+        let parsedPrice = parseFloat(activeFilter.value)
         if (!isNaN(parsedPrice)) {
           filterObject = { price: parsedPrice }
         } else {
-          setPage(1);
-          return;
+          setPage(1)
+          return
         }
-        break;
-      case "brand":
+        break
+      case 'brand':
         filterObject = { brand: activeFilter.value }
-        break;
-      case "product":
+        break
+      case 'product':
         filterObject = { product: activeFilter.value }
-        break;
+        break
       default:
-        return;
+        return
     }
 
     setSearchFilter(filterObject)
     setPage(1)
-  };
+  }
 
-  const { data, isLoading, isError, error } = useQuery(['products', debouncedPage, searchFilter], () => {
-    if (searchFilter) {
-      return fetchProducts(debouncedPage, searchFilter)
-    } else {
-      return fetchProducts(debouncedPage)
+  const { data, isLoading, isError, error } = useQuery(
+    ['products', debouncedPage, searchFilter],
+    () => {
+      if (searchFilter) {
+        return fetchProducts(debouncedPage, searchFilter)
+      } else {
+        return fetchProducts(debouncedPage)
+      }
     }
-  })
+  )
   const products = data ?? []
 
   if (isError) {
-    const errorData = error as Error | AxiosError;
-    return <div className='flex justify-center'>
-      <p className='text-foreground-lighter text-4xl font-medium'>{errorData.message}</p>
-    </div>
+    const errorData = error as Error | AxiosError
+    return (
+      <div className='flex justify-center'>
+        <p className='text-foreground-lighter text-4xl font-medium'>
+          {errorData.message}
+        </p>
+      </div>
+    )
   }
 
   return (
@@ -123,7 +138,8 @@ export const ProductList = () => {
           <div className='p-3 col-span-2'>
             <button
               onClick={handleSearch}
-              className='bg-blue-600 indigo-600 text-white text-sm leading-6 font-semibold px-6 rounded-lg w-full h-[42px] shadow-sm'>
+              className='bg-blue-600 indigo-600 text-white text-sm leading-6 font-semibold px-6 rounded-lg w-full h-[42px] shadow-sm'
+            >
               Искать
             </button>
           </div>
@@ -146,7 +162,6 @@ export const ProductList = () => {
             <MdNavigateBefore className='h-6 w-6' />
           </button>
           <button
-
             disabled={isLoading}
             onClick={() => setPage((p) => p + 1)}
             className='h-8 w-8 flex justify-center items-center hover:bg-card-hover disabled:text-foreground-lighter disabled:bg-card-alternative disabled:cursor-not-allowed'
@@ -156,21 +171,26 @@ export const ProductList = () => {
         </div>
       </div>
       <div className='mt-8'>
-
         {isLoading && (
           <div className='py-12 px-4 flex items-center justify-center flex-col bg-card ring-1 ring-black/[.05] rounded-lg shadow'>
-            <CgSpinner className="h-6 w-6 mr-2 animate-spin" />
+            <CgSpinner className='h-6 w-6 mr-2 animate-spin' />
           </div>
         )}
         {isError && <span>{error}</span>}
 
-        {(products?.length == 0 && !isLoading) && (
+        {products?.length == 0 && !isLoading && (
           <div className='flex items-center justify-center min-h-48 from-card to-transparent bg-gradient-to-r rounded border-dashed border-2'>
-            <p className='text-foreground-light text-xl font-medium'>Нет данных</p>
+            <p className='text-foreground-light text-xl font-medium'>
+              Нет данных
+            </p>
           </div>
         )}
-        {(products.length !== 0) && <Table data={data} columns={['ID', 'Название', 'Цена', 'Бренд']} />}
-        <p className='mt-2 text-foreground-lighter italic text-end'>страница: {debouncedPage}</p>
+        {products.length !== 0 && (
+          <Table data={data} columns={['ID', 'Название', 'Цена', 'Бренд']} />
+        )}
+        <p className='mt-2 text-foreground-lighter italic text-end'>
+          страница: {debouncedPage}
+        </p>
       </div>
     </div>
   )

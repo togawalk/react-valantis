@@ -3,18 +3,18 @@ import { getTimestamp, removeProductDuplicates } from '@/shared/lib'
 import axios from 'axios'
 
 interface ProductFilter {
-  product: string;
+  product: string
 }
 
 interface BrandFilter {
-  brand: string;
+  brand: string
 }
 
 interface PriceFilter {
-  price: number;
+  price: number
 }
 
-export type Filter = ProductFilter | BrandFilter | PriceFilter | null;
+export type Filter = ProductFilter | BrandFilter | PriceFilter | null
 
 export class FetchData {
   private apiUrl = `${import.meta.env.VITE_API_URL}`
@@ -22,7 +22,7 @@ export class FetchData {
     'X-Auth': md5(`${import.meta.env.VITE_AUTH_PASS}_${getTimestamp()}`),
   }
 
-  constructor() { }
+  constructor() {}
 
   async getIds(skip: number) {
     const { data } = await axios.post(
@@ -30,16 +30,14 @@ export class FetchData {
 
       {
         action: 'get_ids',
-        params: { offset: skip, limit: 70},
+        params: { offset: skip, limit: 70 },
       },
       { headers: this.headers }
     )
     return data.result
   }
 
-
   async getProducts(ids: string[]) {
-
     const { data: products } = await axios.post(
       `${import.meta.env.VITE_API_URL}`,
       {
@@ -53,19 +51,17 @@ export class FetchData {
     return removeProductDuplicates(products.result)
   }
 
-
   // async getIdsWithFilter({ filterBy, value }: getIdsWithFilterProps) {
   async getIdsWithFilter(filters: Filter) {
     const { data } = await axios.post(
       this.apiUrl,
       {
-        action: "filter",
-        params: filters 
+        action: 'filter',
+        params: filters,
       },
       { headers: this.headers }
     )
     return data.result
-
   }
 }
 
