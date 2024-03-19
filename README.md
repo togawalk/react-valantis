@@ -1,7 +1,10 @@
 # Valantis Test Task
 
-Link to test task: [here](https://github.com/ValantisJewelry/TestTaskValantis).
-The API provided by the company no longer works.
+Link to test task: [here](https://github.com/ValantisJewelry/TestTaskValantis).  
+
+> [!CAUTION]
+> The API provided by the company no longer works.
+
 Provided API uses Remote Procedure Call (RPC).
 
 ## Build with:
@@ -18,3 +21,11 @@ Provided API uses Remote Procedure Call (RPC).
 
 - pagination
 - filter
+- CI/CD
+
+## Getting Started
+
+```bash
+npm i
+npm run dev
+```
